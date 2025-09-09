@@ -13,7 +13,7 @@ def gen_data():
     faker = Faker()
     
     prod = KafkaProducer(
-        bootstrap_server=kafka_nodes,
+        bootstrap_servers=kafka_nodes,
         value_serializer=lambda x:dumps(x).encode('utf-8')
         )
     my_data = {
