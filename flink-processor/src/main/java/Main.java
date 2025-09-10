@@ -52,6 +52,8 @@ public class Main {
         }); 
 
         cityAndValueStream.print();
+
+        env.execute("Kafka-flink-postgres");
     }
 
     /**
