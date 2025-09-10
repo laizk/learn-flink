@@ -51,7 +51,24 @@ public class Main {
           }
         }); 
 
-        cityAndValueStream.print();
+        // cityAndValueStream.print();
+      cityAndValueStream.addSink(JdbcSink.sink("insert into weather (city, average_temperature) values (?, ?)",
+            (statement, event) -> {
+              statement.setString(1, event.f0);
+              statement.setDouble(2, event.f1);
+            },
+            JdbcExecutionOptions.builder()
+              .withBatchSize(1000)
+              .withBatchIntervalMs(200)
+              .withMaxRetries(5)
+              .build(),
+            new JdbcConnectionOptions.JdbcConnectionOptionsBuilder()
+              .withUrl("jdbc:postgresql://docker.for.mac.host.internal:5438/postgres")
+              .withDriverName("org.postgresql.Driver")
+              .withUsername("postgres")
+              .withPassword("postgres")
+              .build()
+      ));
 
         env.execute("Kafka-flink-postgres");
     }
